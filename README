@@ -1,0 +1,5 @@
+This is going to be a really cool lazy distributed graph processing library,
+My main goal in writing this is to have something thats usefull on big graphs
+that you can't hold entirely in memory that can be processed with clusters of
+machines (mostly I'm thinking about piCloud but it could be used other places
+as well)
