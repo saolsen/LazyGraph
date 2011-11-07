@@ -38,7 +38,7 @@ class BaseNode(object):
         """
         The edges are returned if they have already been loaded, otherwise they
         are loaded using the _get_edges() function (this is a user specified
-        function that gets the edges)
+        function that gets the edges) 
         """
         if (self._edges):
             return self._edges
