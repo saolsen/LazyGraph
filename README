@@ -1,5 +1,84 @@
-This is going to be a really cool lazy distributed graph processing library,
-My main goal in writing this is to have something thats usefull on big graphs
-that you can't hold entirely in memory that can be processed with clusters of
-machines (mostly I'm thinking about piCloud but it could be used other places
-as well)
+===========
+Lazy Graph
+===========
+
+LazyGraph is a graph processing library for python. It's use case is different
+from other similar libraries in that it is meant to be used on graphs that are
+too large to be held in memory, infinate graphs, or graphs where the edges are
+not known until the node is evaluated.
+Graphs are created by defining a Node class. When this node class is defined
+you specify how the data and the edges are obtained (from the id, which is a
+unique key (string) for the node).
+Because we define how the node data and edges are obtained from their id instead
+of creating a graph and loading all the data into it before processing it allows
+us to work on "graph like" objects that are either too large to hold entirely in
+memory or where the edges are unknown.
+The algorithms that come with the library operate on these graphs in such a way
+that data and edges for a node are not calculated untill they are needed and the
+same pure graph functions can work on anything from simple graph nodes stored by
+id in a database, to webpages where the links are parsed out at runtime or even
+(something else cool)
+
+We Use the Library Like This
+============================
+There are two steps involved:
+
+1. Firstly, we must create a Node class that represents our nodes.
+
+2. Then we can pass this class type, any parameters (startId, endId, etc)
+   to the graph processing functions.
+
+To Create a Node Class
+======================
+There are two ways to create a Node class.
+
+* You can subclass lazygraph.BasicNode, if you look at the implementation for
+  BasicNode you will see that it has two methods on it. edges, and data. These
+  methods check to see if the node has an _edges member (or _data) and if they
+  don't they call self._get_edges(). This is the main class you must override
+  to create a Node object.
+  In _get_edges() you specify how to get the edges for the node, from the id of
+  the node. A simple example class that gets the edges of the node from a couchdb
+  database and has no data would look like this.::
+
+      class TestNode(lazygraph.BaseNode)
+      	    def _get_edges(self):
+      	    	# Assuming db is a couchdb database object you set up somewhere else
+	    	document = db[self._id]
+	    	self._edges = document[edges]
+
+  _get_edges() is all that is required to create a simple Node class.
+
+* Alternatively you can use the NodeBuilder to dynamically create a node class
+  for you, there are a few overrides for adding different things to the class
+  but creating the equivilant of the above class would be done like this::
+
+      f = lambda id: db[self._id][edges]
+      TestNode = lazygraph.NodeBuilder(f)
+
+  As you can see the function you pass in to nodebuilder takes a string(which is
+  the id of the node) and returns a list of strings. It is different than the
+  _get_edges() function we described above in that we don't do anything with self,
+  it's just a normal function. Node builder takes care of the self stuff for us.
+  You are encouraged to use NodeBuilder unless you need more refined control over
+  when and how the node loads it's edges and data (for example, when you need to
+  load them at the same time)
+
+Processing Your Graph
+=====================
+Once you have a valid Node class object you can use it to run any of the graph
+processing functions in lazygraph. These functions all take the class object as
+the first parameter and then any additional parameters (typically a startNode id
+is one of them.) Many of them have other certain constraints including the types
+of graphs you would want to use them on and some require your node class to have
+more specialized methods on it (such as heuristic functions, etc) The details for
+how to use them are all available in the documentation. Here is a simple example
+that uses the class from above and finds the shortest path between two nodes.::
+
+     path = lazygraph.BFS_findPath(TestNode, 'a', 'b')
+
+This function will return the shortest path between the node with the id 'a' and
+the node with the id 'b'. The functions can return a variety of types, in this
+case BFS_findPath returns a list of strings but different functions can return
+integers, floats, dictionaries and other more complex objects. Just check the
+documentation to find out what each function returns.
