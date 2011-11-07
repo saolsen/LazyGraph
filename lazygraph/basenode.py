@@ -5,10 +5,9 @@
     A lazy graph processing library for python.
 
     :copyright: (c) 2011 by Stephen Olsen.
-    :license: BSD, see LICENSE for more details.
+    :license: MIT, see LICENSE for more details.
 """
 
-__version__='0.0.1'
 __author__='Stephen Olsen'
 
 class BaseNode(object):
