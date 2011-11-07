@@ -82,3 +82,10 @@ the node with the id 'b'. The functions can return a variety of types, in this
 case BFS_findPath returns a list of strings but different functions can return
 integers, floats, dictionaries and other more complex objects. Just check the
 documentation to find out what each function returns.
+
+My favorite use case for this library (and the one I had in mind when I was
+creating it) is storing your graph information on aws in s3 buckets or amazon
+simpleDB and then running your graph processing algorithms on picloud. In fact
+future releases of this library will include parralel graph processing
+algorithms that leverage piclouds ability to create more picloud instances and
+process large graphs stored in, or parsed from "the cloud."
