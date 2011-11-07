@@ -28,7 +28,7 @@ class TestNode(basenode.BaseNode):
 
 class TestBaseNodeClass(unittest.TestCase):
     def test_FirstTest(self):
-        path = f.BFS_findPath('a', 'e', TestNode)
+        path = f.BFS_findPath(TestNode, 'a', 'e')
         self.assertEqual(path, ['a','b','d','e'])
 
 if __name__ == '__main__':

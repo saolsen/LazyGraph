@@ -17,7 +17,7 @@ __author__ = 'Stephen Olsen'
 
 from collections import deque
 
-def BFS_findPath(startId, endId, _Class):
+def BFS_findPath(_Class, startId, endId):
     queue = deque([_Class(startId)])
     paths = { startId: [startId] }
     while True:
