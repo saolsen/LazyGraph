@@ -11,21 +11,21 @@ you specify how the data and the edges are obtained (from the id, which is a
 unique key (string) for the node).
 Because we define how the node data and edges are obtained from their id instead
 of creating a graph and loading all the data into it before processing it allows
-us to work on "graph like" objects that are either too large to hold entirely in
-memory or where the edges are unknown.
+us to work on "graph like" objects where the structure is not known untill
+evaluation.
 The algorithms that come with the library operate on these graphs in such a way
 that data and edges for a node are not calculated untill they are needed and the
 same pure graph functions can work on anything from simple graph nodes stored by
 id in a database, to webpages where the links are parsed out at runtime or even
-(something else cool)
+discovering paths where you don't know where you can go until you get to a node.
 
 We Use the Library Like This
 ============================
 There are two steps involved:
 
-1. Firstly, we must create a Node class that represents our nodes.
+1. First, we must create a Node class that represents a node in our graph.
 
-2. Then we can pass this class type, any parameters (startId, endId, etc)
+2. Then we can pass this class and any parameters (startId, endId, etc)
    to the graph processing functions.
 
 To Create a Node Class
@@ -33,7 +33,7 @@ To Create a Node Class
 There are two ways to create a Node class.
 
 * You can subclass lazygraph.BasicNode, if you look at the implementation for
-  BasicNode you will see that it has two methods on it. edges, and data. These
+  BasicNode you will see that it has two methods on it, edges, and data. These
   methods check to see if the node has an _edges member (or _data) and if they
   don't they call self._get_edges(). This is the main class you must override
   to create a Node object.
@@ -53,7 +53,7 @@ There are two ways to create a Node class.
   for you, there are a few overrides for adding different things to the class
   but creating the equivilant of the above class would be done like this::
 
-      f = lambda id: db[self._id][edges]
+      f = lambda id: db[id][edges]
       TestNode = lazygraph.NodeBuilder(f)
 
   As you can see the function you pass in to nodebuilder takes a string(which is
