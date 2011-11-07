@@ -23,7 +23,7 @@ class BaseNode(object):
     when we create a node instance but instead we specify how to get the data
     we need at runtime from the node id.
     """
-    def __init__(self, id):
+    def __init__(self, _id):
         """
         When an instance of the node is created, the only thing it has is an id
         Edges and Data will be loaded later when we need them. You may also
@@ -31,7 +31,7 @@ class BaseNode(object):
         """
         self._edges = None
         self._data  = None
-        self._id    = id
+        self._id    = _id
         # self._dbConnect = SomeAlreadySpecifiedConnection
         
     def edges(self):
